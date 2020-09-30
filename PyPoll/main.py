@@ -7,50 +7,73 @@ election_csv = os.path.join('Resources', 'election_data.csv')
 #read in the csv file
 with open(election_csv,'r') as csvfile:
     csv_reader = csv.reader(csvfile,delimiter = ',')
+
+    #skip header row
     csv_header = next(csvfile)
 
+    #create lists and assign variables
     total_votes = 0
     candidates = []
-    vote_list = []
+    vote_counter = []
 
+    #loop through rows in csv file
     for row in csv_reader:
+
+        #total votes counter
         total_votes += 1
 
+        #stores candidate names and vote counts into two lists
         name = str(row[2])
-        # vote_list.append(name)
-        if name not in candidates:
+        if name in candidates:
+            #looks up index location of name in candidate list. Once you have that index number 
+            #you can use that to look up the corresponding value in the vote_counter list
+            candidate_index = candidates.index(name)
+            vote_counter[candidate_index] = vote_counter[candidate_index] + 1
+        else:
+            #if name is not already in the list it adds it to candidates and adds 1 vote to vote_counter
             candidates.append(name)
+            vote_counter.append(1)
 
-        if name == candidates[0]:
-            vote_list[0] = vote_list[0] + 1
+#create more lists and assign variables 
+percentage = []
+most_votes = vote_counter[0]
+winner = 0
 
+for x in range(len(candidates)):
+    #loops through and calculates vote % and stores in a new list called percentages
+    vote_percentage = round(vote_counter[x] / total_votes * 100, 2)
+    percentage.append(vote_percentage)
+    
+    #loop goes through vote_counter list and determines index location that has the most votes 
+    if vote_counter[x] > most_votes:
+        most_votes = vote_counter[x]
+        winner = x
 
-    # def result_calc(vote_list):
-    #     vote_count = vote_list.count(value)
-    #     vote_percentage = vote_count / total_v
+#returns the name of the winner in the candidates list. Use the index location determined in the if statement above^
+election_winner = candidates[winner]
 
-    # khan_votes = vote_list.count("Khan")
-    # correy_votes = vote_list.count("Correy")
-    # li_votes = vote_list.count("Li")
-    # otooley_votes = vote_list.count("O'Tooley")
+#prints results
+print("Election Results")
+print("------------------------")
+print(f"Total Votes: {total_votes}")
+print("------------------------")
+for x in range(len(candidates)):
+    print(f"{candidates[x]}: {percentage[x]}% ({vote_counter[x]})")
+print("------------------------")    
+print(f"Winner: {election_winner}")
+print("------------------------")
 
-    # khan_percent = (khan_votes / total_votes) * 100
-    # correy_percent = (correy_votes / total_votes) * 100
-    # li_percent = (li_votes / total_votes) * 100
-    # otooley_percent = (otooley_votes / total_votes) * 100
+#specifies the file path for output txt file
+results_path = os.path.join("poll.txt")
+poll = open(results_path, "w+")
 
-print(candidates)
-print(vote_list)
-# print(khan_percent)
-
-
-
-
-# #print out analysis
-# print(f'Financial Analysis {total_votes}')
-
-
-# results_path = os.path.join("results.txt")
-# results = open(results_path, "w+")
-# #print out analysis
-# results.write(f'Financial Analysis' + "\n")
+#write output to txt file
+poll.write(f"Election Results" + "\n")
+poll.write(f"------------------------" + "\n")
+poll.write(f"Total Votes: {total_votes}" + "\n")
+poll.write(f"------------------------" + "\n")
+for x in range(len(candidates)):
+    poll.write(f"{candidates[x]}: {percentage[x]}% ({vote_counter[x]})" + "\n")
+poll.write(f"------------------------" + "\n")    
+poll.write(f"Winner: {election_winner}" + "\n")
+poll.write(f"------------------------" + "\n")

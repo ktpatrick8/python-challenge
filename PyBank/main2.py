@@ -1,6 +1,7 @@
 import os
 import csv
 
+
 # Path to collect data from the Resources folder
 budget_csv = os.path.join('Resources', 'budget_data.csv')
 
@@ -9,6 +10,7 @@ with open(budget_csv,'r') as csvfile:
     csv_reader = csv.reader(csvfile,delimiter = ',')
     csv_header = next(csvfile)
 
+    #create lists and assign variables
     total_months = 0
     total = 0
     great_increase = 0
@@ -17,6 +19,7 @@ with open(budget_csv,'r') as csvfile:
     previous_row = 0
 
     for row in csv_reader:
+        
         total_months += 1
         total += int(row[1])
         change = int(row[1]) - previous_row
@@ -28,7 +31,7 @@ with open(budget_csv,'r') as csvfile:
         if change < great_decrease:
             great_decrease = change
 
-average = sum(month_change) / total_months
+average = round(sum(month_change) / total_months, 2)
 
 #print out analysis
 print(f'Financial Analysis')
@@ -39,9 +42,10 @@ print(f'Average Change : ${average}')
 print(f'Greatest Increase in Profits : Feb-2012 (${great_increase})')
 print(f'Greatest Decrease in Profits : Sep-2013 (${great_decrease})')
 
+#specify file path for txt file
 results_path = os.path.join("results.txt")
 results = open(results_path, "w+")
-#print out analysis
+#write analysis to txt file
 results.write(f'Financial Analysis' + "\n")
 results.write(f'--------------------------------------'+ "\n")
 results.write(f'Total Months : {total_months}'+ "\n")
