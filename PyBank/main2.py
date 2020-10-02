@@ -4,7 +4,7 @@ import csv
 
 # Path to collect data from the Resources folder
 budget_csv = os.path.join('Resources', 'budget_data.csv')
-
+month_change = []
 #read in the csv file
 with open(budget_csv,'r') as csvfile:
     csv_reader = csv.reader(csvfile,delimiter = ',')
@@ -15,7 +15,7 @@ with open(budget_csv,'r') as csvfile:
     total = 0
     great_increase = 0
     great_decrease = 0
-    month_change = []
+    
     previous_row = 0
 
     for row in csv_reader:
@@ -24,15 +24,26 @@ with open(budget_csv,'r') as csvfile:
         total += int(row[1])
         change = int(row[1]) - previous_row
         previous_row = int(row[1])
+        #stores monthly change in a list
         month_change.append(change)
         
+        #looks to see if monthly change is greater or lower than greatest increase or decrease and if so saves that new value
         if change > great_increase:
             great_increase = change
         if change < great_decrease:
             great_decrease = change
 
-average = round(sum(month_change) / total_months, 2)
+#loops through monthly change list and totals
+total_change = 0
 
+for x in range(len(month_change)):
+    total_change = total_change + month_change[x]
+
+average =  round(total_change / len(month_change), 2)
+
+
+print(month_change)
+print(total_change)
 #print out analysis
 print(f'Financial Analysis')
 print(f'--------------------------------------')
